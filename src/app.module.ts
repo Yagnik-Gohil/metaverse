@@ -6,6 +6,8 @@ import { envConfiguration } from 'config/configuration';
 import { envSchema } from 'config/validation';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { database } from 'config/database';
+import { AuthModule } from './modules/auth/auth.module';
+import { UserModule } from './modules/user/user.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { database } from 'config/database';
       useFactory: (configService: ConfigService) => database(configService),
       inject: [ConfigService],
     }),
+    AuthModule,
+    UserModule,
   ],
   controllers: [AppController],
   providers: [AppService],
