@@ -1,8 +1,9 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Res } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import response from 'src/helpers/response';
 import { Response } from 'express';
 import { SignUpDto } from './dto/signup.dto';
+import { CONSTANT } from 'src/helpers/constants/message';
 
 @Controller('auth')
 export class AuthController {
@@ -10,7 +11,6 @@ export class AuthController {
 
   @Post('signup')
   async signUp(
-    @Req() req,
     @Body()
     signUpDto: SignUpDto,
     @Res() res: Response,
@@ -18,7 +18,7 @@ export class AuthController {
     const data = await this.authService.signUp(signUpDto);
     return response.successCreate(
       {
-        message: '',
+        message: CONSTANT.SIGN_UP,
         data: data,
       },
       res,

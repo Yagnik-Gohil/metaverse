@@ -8,7 +8,7 @@ export class User extends DefaultEntity {
   @Column({ length: 255, nullable: true })
   name: string;
 
-  @Column({ unique: true, length: 255 })
+  @Column({ unique: true, length: 255, nullable: true })
   email: string;
 
   @Column({ unique: true, length: 255 })

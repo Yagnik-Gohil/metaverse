@@ -1,14 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { SignUpDto } from './dto/signup.dto';
-import { UserService } from '../user/user.service';
 import { EmailService } from 'src/helpers/services/email-service';
 
 @Injectable()
 export class AuthService {
-  constructor(
-    private readonly userService: UserService,
-    private readonly emailService: EmailService,
-  ) {}
+  constructor(private readonly emailService: EmailService) {}
 
   async signUp(signUpDto: SignUpDto) {
     // Simulate hashing password and storing user
