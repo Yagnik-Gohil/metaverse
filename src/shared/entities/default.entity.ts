@@ -12,13 +12,13 @@ export class DefaultEntity {
 
   @Exclude()
   @CreateDateColumn({ name: 'created_at' })
-  created_at: Date;
+  created_at: string;
 
   @Exclude()
   @UpdateDateColumn({ name: 'updated_at' })
-  updated_at: Date;
+  updated_at: string;
 
   @Exclude()
   @DeleteDateColumn({ name: 'deleted_at' })
-  deleted_at: Date;
+  deleted_at: string;
 }

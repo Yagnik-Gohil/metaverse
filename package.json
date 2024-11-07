@@ -20,7 +20,13 @@
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
     "pre:commit": "npm run format && npm run lint",
-    "pre:push": "npm run build"
+    "pre:push": "npm run build",
+    "typeorm": "npm run build && npx typeorm -d dist/data-source.js",
+    "migration:generate": "export NODE_ENV=localhost && npm run typeorm -- migration:generate",
+    "migration:up:localhost": "export NODE_ENV=localhost && npm run typeorm -- migration:run",
+    "migration:down:localhost": "export NODE_ENV=localhost && npm run typeorm -- migration:revert",
+    "migration:up:development": "export NODE_ENV=development && npm run typeorm -- migration:run",
+    "migration:down:development": "export NODE_ENV=development && npm run typeorm -- migration:revert"
   },
   "pre-commit": "pre:commit",
   "pre-push": "pre:push",
@@ -31,6 +37,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@nestjs/typeorm": "^10.0.2",
+    "bcrypt": "^5.1.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
     "helmet": "^8.0.0",

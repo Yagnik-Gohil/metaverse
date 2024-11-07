@@ -1,27 +1,34 @@
 import { Exclude } from 'class-transformer';
-import { UserStatus } from 'src/helpers/constants/enum';
-import { DefaultEntity } from 'src/helpers/entities/default.entity';
-import { Entity, Column } from 'typeorm';
+import { UserStatus } from '@root/src/shared/constants/enum';
+import { DefaultEntity } from '@root/src/shared/entities/default.entity';
+import { Token } from 'src/modules/token/entities/token.entity';
+import { Entity, Column, OneToMany } from 'typeorm';
 
 @Entity()
 export class User extends DefaultEntity {
-  @Column({ length: 255, nullable: true })
+  @Column({ type: 'character varying', nullable: true })
   name: string;
 
-  @Column({ unique: true, length: 255, nullable: true })
+  @Column({ type: 'character varying', unique: true, length: 255 })
   email: string;
 
-  @Column({ unique: true, length: 255 })
-  username: string;
-
   @Exclude()
-  @Column({ length: 255 })
+  @Column({ type: 'character varying', length: 255 })
   password: string;
 
   @Column({
     type: 'enum',
     enum: UserStatus,
-    default: UserStatus.IN_ACTIVE,
+    default: UserStatus.ACTIVE,
   })
   status: UserStatus;
+
+  @Column({
+    type: 'boolean',
+    default: false,
+  })
+  is_verified: boolean;
+
+  @OneToMany(() => Token, (token) => token.user)
+  token: Token[];
 }

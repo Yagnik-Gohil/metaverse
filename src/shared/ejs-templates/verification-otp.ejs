@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OTP Verification</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f7f7f7;
+      color: #333;
+      padding: 20px;
+      text-align: center;
+    }
+    .container {
+      max-width: 500px;
+      margin: 0 auto;
+      background: #ffffff;
+      border-radius: 10px;
+      padding: 20px;
+      box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.2);
+    }
+    .otp {
+      font-size: 24px;
+      font-weight: bold;
+      color: #007bff;
+      letter-spacing: 4px;
+    }
+    .footer {
+      font-size: 12px;
+      color: #888;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Hello, <%= name %>!</h2>
+    <p>Your One-Time Password (OTP) for verification is:</p>
+    <p class="otp"><%= otp %></p>
+    <p>Please use this code within the next <%= minutes %> minutes to complete your verification process.</p>
+    <p>If you didn’t request this, please ignore this email.</p>
+    <div class="footer">
+      <p>Thank you,<br>Metaverse</p>
+    </div>
+  </div>
+</body>
+</html>
