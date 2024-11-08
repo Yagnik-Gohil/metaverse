@@ -1,6 +1,7 @@
 import { DefaultEntity } from '@root/src/shared/entities/default.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
+import { Admin } from '../../admin/entities/admin.entity';
 
 @Entity()
 export class Token extends DefaultEntity {
@@ -22,4 +23,8 @@ export class Token extends DefaultEntity {
   @ManyToOne(() => User, (user) => user.token, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'user_id' })
   user: User;
+
+  @ManyToOne(() => Admin, (admin) => admin.token, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'admin_id' })
+  admin: Admin;
 }

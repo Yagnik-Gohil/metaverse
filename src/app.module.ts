@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { OtpModule } from './modules/otp/otp.module';
+import { AdminModule } from './modules/admin/admin.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { OtpModule } from './modules/otp/otp.module';
     UserModule,
     TokenModule,
     OtpModule,
+    AdminModule,
   ],
   controllers: [AppController],
   providers: [AppService],

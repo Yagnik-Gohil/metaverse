@@ -14,4 +14,9 @@ export const CONSTANT = {
   OTP_VERIFICATION: 'Your Metaverse Verification OTP',
   VERIFY_OTP_SENT_TO: (email: string) =>
     `An OTP has been sent to ${email}. Please check your inbox.`,
+  INVALID_OTP: 'Invalid OTP!',
+  WRONG_CREDENTIALS: 'Wrong credentials!',
+  COMPLETE_VERIFICATION:
+    'OTP Sent to your email, Please complete Signup OTP verification',
+  ACCOUNT_BLOCKED: 'Your account is blocked by admin',
 };
