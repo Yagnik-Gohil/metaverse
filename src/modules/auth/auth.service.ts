@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { SignUpDto } from './dto/signup.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from '../token/entities/token.entity';
-import { Repository } from 'typeorm';
+import { IsNull, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
 import { CONSTANT } from '@root/src/shared/constants/message';
 import * as bcrypt from 'bcrypt';
@@ -27,6 +27,77 @@ export class AuthService {
     @InjectRepository(Otp)
     private readonly otpRepository: Repository<Otp>,
   ) {}
+
+  async getToken(
+    table: 'user' | 'admin',
+    entity: User | Admin,
+    deviceId: string,
+    ip: string,
+  ): Promise<string> {
+    const token = await this.tokenRepository.findOne({
+      where: {
+        [table]: { id: entity.id },
+        device_id: deviceId,
+      },
+    });
+
+    // generate token
+    const newToken = await this.generateToken({ id: entity.id, table });
+
+    if (token) {
+      const isExpired = await this.isTokenExpired(token.jwt);
+
+      if (isExpired) {
+        // Update with new token
+        await this.tokenRepository.save({
+          id: token.id,
+          token: newToken,
+          ip: ip,
+          login_time: new Date().toISOString(),
+        });
+        // New Token
+        return newToken;
+      }
+
+      // Update Login Time
+      await this.tokenRepository.save({
+        id: token.id,
+        ip: ip,
+        login_time: new Date().toISOString(),
+      });
+      // Old token which is not expired
+      return token.jwt;
+    }
+
+    // Create new token
+    const result = await this.tokenRepository.save({
+      [table]: { id: entity.id },
+      jwt: newToken,
+      device_id: deviceId,
+      ip: ip,
+      login_time: new Date().toISOString(),
+    });
+    return result.jwt;
+  }
+
+  isTokenExpired = async (token: string) => {
+    try {
+      const valid = await jwt.verify(token, process.env.JWT_SECRET);
+      if (valid) {
+        return false;
+      } else {
+        return true;
+      }
+    } catch (err) {
+      return true;
+    }
+  };
+
+  generateToken = (payload: IJwtPayload) => {
+    return jwt.sign(payload, process.env.JWT_SECRET, {
+      expiresIn: process.env.JWT_EXPIRES_IN,
+    });
+  };
 
   async hashPassword(password: string): Promise<string> {
     const salt = await bcrypt.genSalt();
@@ -246,74 +317,17 @@ export class AuthService {
     };
   }
 
-  async getToken(
-    table: 'user' | 'admin',
-    entity: User | Admin,
-    deviceId: string,
-    ip: string,
-  ): Promise<string> {
-    const token = await this.tokenRepository.findOne({
-      where: {
-        [table]: { id: entity.id },
-        device_id: deviceId,
-      },
-    });
-
-    // generate token
-    const newToken = await this.generateToken({ id: entity.id, table });
-
-    if (token) {
-      const isExpired = await this.isTokenExpired(token.jwt);
-
-      if (isExpired) {
-        // Update with new token
-        await this.tokenRepository.save({
-          id: token.id,
-          token: newToken,
-          ip: ip,
-          login_time: new Date().toISOString(),
-        });
-        // New Token
-        return newToken;
-      }
-
-      // Update Login Time
-      await this.tokenRepository.save({
-        id: token.id,
+  async logout(table: 'user' | 'admin', entity: Admin | User, ip: string) {
+    const time = new Date().toISOString();
+    const result = await this.tokenRepository.update(
+      { [table]: { id: entity.id }, deleted_at: IsNull() },
+      {
+        jwt: 'logged out',
+        logout_time: time,
         ip: ip,
-        login_time: new Date().toISOString(),
-      });
-      // Old token which is not expired
-      return token.jwt;
-    }
-
-    // Create new token
-    const result = await this.tokenRepository.save({
-      [table]: { id: entity.id },
-      jwt: newToken,
-      device_id: deviceId,
-      ip: ip,
-      login_time: new Date().toISOString(),
-    });
-    return result.jwt;
+        deleted_at: time,
+      },
+    );
+    return result.affected ? CONSTANT.LOGOUT : CONSTANT.METHOD_NOT_ALLOWED;
   }
-
-  isTokenExpired = async (token: string) => {
-    try {
-      const valid = await jwt.verify(token, process.env.JWT_SECRET);
-      if (valid) {
-        return false;
-      } else {
-        return true;
-      }
-    } catch (err) {
-      return true;
-    }
-  };
-
-  generateToken = (payload: IJwtPayload) => {
-    return jwt.sign(payload, process.env.JWT_SECRET, {
-      expiresIn: process.env.JWT_EXPIRES_IN,
-    });
-  };
 }

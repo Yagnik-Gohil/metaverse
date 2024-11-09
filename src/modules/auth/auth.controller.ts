@@ -1,4 +1,4 @@
-import { Body, Controller, Post, Req, Res } from '@nestjs/common';
+import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import response from '@root/src/shared/response';
 import { Request, Response } from 'express';
@@ -8,6 +8,7 @@ import { LoginDto } from './dto/login.dto';
 import { CONSTANT } from '@root/src/shared/constants/message';
 import getIp from '@root/src/shared/function/get-ip';
 import { EmailDto } from './dto/email.dto';
+import { AuthGuard } from '@root/src/shared/guard/auth.guard';
 
 @Controller('auth')
 export class AuthController {
@@ -76,6 +77,25 @@ export class AuthController {
       {
         message: data.message,
         data: data.data,
+      },
+      res,
+    );
+  }
+
+  @UseGuards(AuthGuard)
+  @Post('logout')
+  async logout(@Req() req: Request, @Res() res: Response) {
+    const ip = getIp(req);
+    const payload = req['entity'];
+    const message = await this.authService.logout(
+      payload.table,
+      payload[payload.table],
+      ip,
+    );
+    return response.successResponse(
+      {
+        message: message,
+        data: {},
       },
       res,
     );

@@ -45,7 +45,12 @@ export class AuthGuard implements CanActivate {
           throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
         }
 
-        request[payload.table] = isExists[payload.table];
+        const entity = {
+          table: payload.table,
+          [payload.table]: isExists[payload.table],
+        };
+
+        request['entity'] = entity;
       } else {
         throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
       }
