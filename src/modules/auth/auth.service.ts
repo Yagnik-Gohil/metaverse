@@ -24,6 +24,8 @@ export class AuthService {
     private readonly tokenRepository: Repository<Token>,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    @InjectRepository(Admin)
+    private readonly adminRepository: Repository<Admin>,
     @InjectRepository(Otp)
     private readonly otpRepository: Repository<Otp>,
   ) {}
@@ -254,6 +256,7 @@ export class AuthService {
     });
 
     const loginResponse = await this.getLoginResponse(
+      'user',
       otp.user,
       verifyOtpDto.device_id,
       ip,
@@ -297,6 +300,7 @@ export class AuthService {
     }
 
     const loginResponse = await this.getLoginResponse(
+      'user',
       user,
       loginDto.device_id,
       ip,
@@ -304,14 +308,50 @@ export class AuthService {
     return { message: CONSTANT.LOGIN, data: loginResponse };
   }
 
-  async getLoginResponse(user: User, deviceId: string, ip: string) {
-    const jwt = await this.getToken('user', user, deviceId, ip);
+  async loginAdmin(loginDto: LoginDto, ip: string) {
+    const admin = await this.adminRepository.findOne({
+      where: {
+        email: loginDto.email,
+      },
+    });
+
+    // Admin not exists
+    if (!admin) {
+      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+    }
+
+    const isCorrectPassword = await this.comparePassword(
+      loginDto.password,
+      admin.password,
+    );
+
+    // Wrong Password
+    if (!isCorrectPassword) {
+      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+    }
+
+    const loginResponse = await this.getLoginResponse(
+      'admin',
+      admin,
+      loginDto.device_id,
+      ip,
+    );
+    return { message: CONSTANT.LOGIN, data: loginResponse };
+  }
+
+  async getLoginResponse(
+    table: 'user' | 'admin',
+    entity: User | Admin,
+    deviceId: string,
+    ip: string,
+  ) {
+    const jwt = await this.getToken(table, entity, deviceId, ip);
     return {
-      user: {
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        created_at: user.created_at,
+      [table]: {
+        id: entity.id,
+        name: entity.name,
+        email: entity.email,
+        created_at: entity.created_at,
       },
       jwt,
     };

@@ -82,6 +82,24 @@ export class AuthController {
     );
   }
 
+  @Post('login/admin')
+  async adminLogin(
+    @Body()
+    loginDto: LoginDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const ip = getIp(req);
+    const data = await this.authService.loginAdmin(loginDto, ip);
+    return response.successResponse(
+      {
+        message: data.message,
+        data: data.data,
+      },
+      res,
+    );
+  }
+
   @UseGuards(AuthGuard)
   @Post('logout')
   async logout(@Req() req: Request, @Res() res: Response) {

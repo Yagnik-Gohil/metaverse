@@ -21,3 +21,9 @@ npm run migration:generate src/migrations/name
 ```
 npx typeorm migration:create src/migrations/name
 ```
+
+#### Seeder create command:
+
+```
+npx typeorm migration:create src/seeders/name
+```
