@@ -15,6 +15,7 @@ import { VerifyOtpDto } from './dto/verifyOtp.dto';
 import { LoginDto } from './dto/login.dto';
 import { Admin } from '../admin/entities/admin.entity';
 import { EmailDto } from './dto/email.dto';
+import { IJwtPayload } from '@root/src/shared/constants/types';
 
 @Injectable()
 export class AuthService {
@@ -259,7 +260,7 @@ export class AuthService {
     });
 
     // generate token
-    const newToken = await this.generateToken(entity.id, table);
+    const newToken = await this.generateToken({ id: entity.id, table });
 
     if (token) {
       const isExpired = await this.isTokenExpired(token.jwt);
@@ -310,8 +311,8 @@ export class AuthService {
     }
   };
 
-  generateToken = (id, table) => {
-    return jwt.sign({ id, table }, process.env.JWT_SECRET, {
+  generateToken = (payload: IJwtPayload) => {
+    return jwt.sign(payload, process.env.JWT_SECRET, {
       expiresIn: process.env.JWT_EXPIRES_IN,
     });
   };

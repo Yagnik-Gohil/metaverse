@@ -19,4 +19,5 @@ export const CONSTANT = {
   COMPLETE_VERIFICATION:
     'OTP Sent to your email, Please complete Signup OTP verification',
   ACCOUNT_BLOCKED: 'Your account is blocked by admin',
+  UNAUTHENTICATED: 'Please log in to access.',
 };
