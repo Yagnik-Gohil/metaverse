@@ -1,14 +1,14 @@
 import { Body, Controller, Post, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
-import response from '@root/src/shared/response';
 import { Request, Response } from 'express';
 import { SignUpDto } from './dto/signup.dto';
 import { VerifyOtpDto } from './dto/verifyOtp.dto';
 import { LoginDto } from './dto/login.dto';
-import { CONSTANT } from '@root/src/shared/constants/message';
-import getIp from '@root/src/shared/function/get-ip';
 import { EmailDto } from './dto/email.dto';
-import { AuthGuard } from '@root/src/shared/guard/auth.guard';
+import response from '@shared/response';
+import getIp from '@shared/function/get-ip';
+import { CONSTANT } from '@shared/constants/message';
+import { AuthGuard } from '@shared/guard/auth.guard';
 
 @Controller('auth')
 export class AuthController {

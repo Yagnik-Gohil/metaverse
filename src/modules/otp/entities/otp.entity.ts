@@ -1,7 +1,7 @@
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
-import { DefaultEntity } from '@root/src/shared/entities/default.entity';
 import { User } from '../../user/entities/user.entity';
-import { OtpType } from '@root/src/shared/constants/enum';
+import { DefaultEntity } from '@shared/entities/default.entity';
+import { OtpType } from '@shared/constants/enum';
 
 @Entity()
 export class Otp extends DefaultEntity {

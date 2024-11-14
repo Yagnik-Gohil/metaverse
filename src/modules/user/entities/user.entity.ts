@@ -1,6 +1,6 @@
+import { UserStatus } from '@shared/constants/enum';
+import { DefaultEntity } from '@shared/entities/default.entity';
 import { Exclude } from 'class-transformer';
-import { UserStatus } from '@root/src/shared/constants/enum';
-import { DefaultEntity } from '@root/src/shared/entities/default.entity';
 import { Token } from 'src/modules/token/entities/token.entity';
 import { Entity, Column, OneToMany } from 'typeorm';
 

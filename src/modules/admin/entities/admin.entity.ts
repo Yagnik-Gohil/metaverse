@@ -1,7 +1,7 @@
-import { DefaultEntity } from '@root/src/shared/entities/default.entity';
 import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany } from 'typeorm';
 import { Token } from '../../token/entities/token.entity';
+import { DefaultEntity } from '@shared/entities/default.entity';
 
 @Entity()
 export class Admin extends DefaultEntity {

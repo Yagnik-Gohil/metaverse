@@ -1,7 +1,7 @@
-import { DefaultEntity } from '@root/src/shared/entities/default.entity';
 import { User } from 'src/modules/user/entities/user.entity';
 import { Column, Entity, JoinColumn, ManyToOne } from 'typeorm';
 import { Admin } from '../../admin/entities/admin.entity';
+import { DefaultEntity } from '@shared/entities/default.entity';
 
 @Entity()
 export class Token extends DefaultEntity {

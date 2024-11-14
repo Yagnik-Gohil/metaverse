@@ -9,8 +9,8 @@ import * as jwt from 'jsonwebtoken';
 import { CONSTANT } from '../constants/message';
 import { IJwtPayload } from '../constants/types';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Token } from '@root/src/modules/token/entities/token.entity';
 import { Repository } from 'typeorm';
+import { Token } from '@modules/token/entities/token.entity';
 
 @Injectable()
 export class AuthGuard implements CanActivate {

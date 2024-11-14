@@ -4,18 +4,18 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Token } from '../token/entities/token.entity';
 import { IsNull, Repository } from 'typeorm';
 import { User } from '../user/entities/user.entity';
-import { CONSTANT } from '@root/src/shared/constants/message';
 import * as bcrypt from 'bcrypt';
 import * as jwt from 'jsonwebtoken';
 import { Otp } from '../otp/entities/otp.entity';
-import generateRandomOtp from '@root/src/shared/function/generate-random-otp';
-import { OtpType, UserStatus } from '@root/src/shared/constants/enum';
 import sendOtp from 'src/shared/function/send-otp';
 import { VerifyOtpDto } from './dto/verifyOtp.dto';
 import { LoginDto } from './dto/login.dto';
 import { Admin } from '../admin/entities/admin.entity';
 import { EmailDto } from './dto/email.dto';
-import { IJwtPayload } from '@root/src/shared/constants/types';
+import { IJwtPayload } from '@shared/constants/types';
+import { CONSTANT } from '@shared/constants/message';
+import generateRandomOtp from '@shared/function/generate-random-otp';
+import { OtpType, UserStatus } from '@shared/constants/enum';
 
 @Injectable()
 export class AuthService {
