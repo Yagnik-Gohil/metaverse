@@ -10,7 +10,6 @@ export class DefaultEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Exclude()
   @CreateDateColumn({ name: 'created_at' })
   created_at: string;
 

@@ -7,7 +7,7 @@ import { LoginDto } from './dto/login.dto';
 import { EmailDto } from './dto/email.dto';
 import response from '@shared/response';
 import getIp from '@shared/function/get-ip';
-import { CONSTANT } from '@shared/constants/message';
+import { MESSAGE } from '@shared/constants/constant';
 import { AuthGuard } from '@shared/guard/auth.guard';
 
 @Controller('auth')
@@ -57,7 +57,7 @@ export class AuthController {
     const data = await this.authService.verifySignupOtp(verifyOtpDto, ip);
     return response.successResponse(
       {
-        message: CONSTANT.SIGN_UP,
+        message: MESSAGE.SIGN_UP,
         data: data,
       },
       res,
@@ -100,8 +100,8 @@ export class AuthController {
     );
   }
 
-  @UseGuards(AuthGuard)
   @Post('logout')
+  @UseGuards(AuthGuard)
   async logout(@Req() req: Request, @Res() res: Response) {
     const ip = getIp(req);
     const payload = req['entity'];

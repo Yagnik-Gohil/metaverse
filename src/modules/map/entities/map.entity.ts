@@ -19,7 +19,7 @@ export class Map extends DefaultEntity {
   solid_tile: number[];
 
   @Column({ type: 'character varying' })
-  tile_set: number;
+  tile_set: string;
 
   @Column({ type: 'character varying' })
   thumbnail: string;

@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateMapDto } from './dto/create-map.dto';
 import { UpdateMapDto } from './dto/update-map.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Map } from './entities/map.entity';
+import { FindManyOptions, Repository } from 'typeorm';
+import { plainToInstance } from 'class-transformer';
 
 @Injectable()
 export class MapService {
-  create(createMapDto: CreateMapDto) {
-    return 'This action adds a new map';
+  constructor(
+    @InjectRepository(Map)
+    private readonly mapRepository: Repository<Map>,
+  ) {}
+  async create(createMapDto: CreateMapDto) {
+    const data = await this.mapRepository.save(createMapDto);
+    return plainToInstance(Map, data);
   }
 
-  findAll() {
-    return `This action returns all map`;
+  async findAll(where: FindManyOptions<Map>): Promise<[Map[], number]> {
+    const [list, count] = await this.mapRepository.findAndCount(where);
+    return [plainToInstance(Map, list), count];
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} map`;
+  async findOne(id: string) {
+    const result = await this.mapRepository.findOne({ where: { id } });
+    return plainToInstance(Map, result);
   }
 
-  update(id: number, updateMapDto: UpdateMapDto) {
-    return `This action updates a #${id} map`;
+  async update(id: string, updateMapDto: UpdateMapDto) {
+    const result = await this.mapRepository.update(id, updateMapDto);
+    return result;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} map`;
+  async remove(id: string) {
+    const result = await this.mapRepository.softDelete(id);
+    return result;
   }
 }

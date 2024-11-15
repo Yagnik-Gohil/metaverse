@@ -1,4 +1,4 @@
-import { CONSTANT } from '../constants/message';
+import { MESSAGE } from '../constants/constant';
 import { renderFile } from 'ejs';
 import { join } from 'path';
 import { EmailService } from '../services/email-service';
@@ -17,7 +17,7 @@ const sendOtp = async (user: User, otp: number) => {
   );
   await emailService.sendMail({
     to: user.email,
-    subject: CONSTANT.OTP_VERIFICATION,
+    subject: MESSAGE.OTP_VERIFICATION,
     html: ejsTemplate,
   });
   return otp;

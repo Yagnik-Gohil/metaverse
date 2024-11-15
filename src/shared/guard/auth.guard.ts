@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { Request } from 'express';
 import * as jwt from 'jsonwebtoken';
-import { CONSTANT } from '../constants/message';
+import { MESSAGE } from '../constants/constant';
 import { IJwtPayload } from '../constants/types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -23,7 +23,7 @@ export class AuthGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const token = this.extractTokenFromHeader(request);
     if (!token) {
-      throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
+      throw new UnauthorizedException(MESSAGE.UNAUTHENTICATED);
     }
     try {
       const payload: IJwtPayload = await jwt.verify(
@@ -42,7 +42,7 @@ export class AuthGuard implements CanActivate {
         });
 
         if (!isExists) {
-          throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
+          throw new UnauthorizedException(MESSAGE.UNAUTHENTICATED);
         }
 
         const entity = {
@@ -52,10 +52,10 @@ export class AuthGuard implements CanActivate {
 
         request['entity'] = entity;
       } else {
-        throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
+        throw new UnauthorizedException(MESSAGE.UNAUTHENTICATED);
       }
     } catch {
-      throw new UnauthorizedException(CONSTANT.UNAUTHENTICATED);
+      throw new UnauthorizedException(MESSAGE.UNAUTHENTICATED);
     }
     return true;
   }

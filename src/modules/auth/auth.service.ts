@@ -13,7 +13,7 @@ import { LoginDto } from './dto/login.dto';
 import { Admin } from '../admin/entities/admin.entity';
 import { EmailDto } from './dto/email.dto';
 import { IJwtPayload } from '@shared/constants/types';
-import { CONSTANT } from '@shared/constants/message';
+import { MESSAGE } from '@shared/constants/constant';
 import generateRandomOtp from '@shared/function/generate-random-otp';
 import { OtpType, UserStatus } from '@shared/constants/enum';
 
@@ -128,7 +128,7 @@ export class AuthService {
     });
 
     if (isExists) {
-      throw new BadRequestException(CONSTANT.ALREADY_EXISTS('User'));
+      throw new BadRequestException(MESSAGE.ALREADY_EXISTS('User'));
     }
 
     const hashedPassword = await this.hashPassword(signUpDto.password);
@@ -152,7 +152,7 @@ export class AuthService {
     // Send OTP to user's email
     await sendOtp(user, otp.otp);
 
-    return CONSTANT.VERIFY_OTP_SENT_TO(user.email);
+    return MESSAGE.VERIFY_OTP_SENT_TO(user.email);
   }
 
   async resendSignupOtp(emailDto: EmailDto) {
@@ -164,7 +164,7 @@ export class AuthService {
 
     // User not exists
     if (!user) {
-      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     // if Signup otp is not verified, then send new signup otp
@@ -202,16 +202,16 @@ export class AuthService {
         await sendOtp(user, updateOtp.otp);
       }
 
-      return CONSTANT.VERIFY_OTP_SENT_TO(user.email);
+      return MESSAGE.VERIFY_OTP_SENT_TO(user.email);
     }
 
     // User is blocked
     if (user.status == UserStatus.BLOCKED) {
-      throw new BadRequestException(CONSTANT.ACCOUNT_BLOCKED);
+      throw new BadRequestException(MESSAGE.ACCOUNT_BLOCKED);
     }
 
     // Otp already verified
-    throw new BadRequestException(CONSTANT.METHOD_NOT_ALLOWED);
+    throw new BadRequestException(MESSAGE.METHOD_NOT_ALLOWED);
   }
 
   async verifySignupOtp(verifyOtpDto: VerifyOtpDto, ip: string) {
@@ -229,7 +229,7 @@ export class AuthService {
 
     // If entered wrong otp
     if (!otp) {
-      throw new BadRequestException(CONSTANT.INVALID_OTP);
+      throw new BadRequestException(MESSAGE.INVALID_OTP);
     }
 
     const isExpired =
@@ -242,7 +242,7 @@ export class AuthService {
         deleted_at: new Date().toISOString(),
       });
 
-      throw new BadRequestException(CONSTANT.INVALID_OTP);
+      throw new BadRequestException(MESSAGE.INVALID_OTP);
     }
 
     // Verify OTP.
@@ -273,20 +273,20 @@ export class AuthService {
 
     // User not exists
     if (!user) {
-      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     // Signup is not complete
     if (!user.is_verified) {
       return {
-        message: CONSTANT.COMPLETE_VERIFICATION,
+        message: MESSAGE.COMPLETE_VERIFICATION,
         data: { type: 'signup', email: user.email },
       };
     }
 
     // User is blocked
     if (user.status == UserStatus.BLOCKED) {
-      throw new BadRequestException(CONSTANT.ACCOUNT_BLOCKED);
+      throw new BadRequestException(MESSAGE.ACCOUNT_BLOCKED);
     }
 
     const isCorrectPassword = await this.comparePassword(
@@ -296,7 +296,7 @@ export class AuthService {
 
     // Wrong Password
     if (!isCorrectPassword) {
-      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     const loginResponse = await this.getLoginResponse(
@@ -305,7 +305,7 @@ export class AuthService {
       loginDto.device_id,
       ip,
     );
-    return { message: CONSTANT.LOGIN, data: loginResponse };
+    return { message: MESSAGE.LOGIN, data: loginResponse };
   }
 
   async loginAdmin(loginDto: LoginDto, ip: string) {
@@ -317,7 +317,7 @@ export class AuthService {
 
     // Admin not exists
     if (!admin) {
-      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     const isCorrectPassword = await this.comparePassword(
@@ -327,7 +327,7 @@ export class AuthService {
 
     // Wrong Password
     if (!isCorrectPassword) {
-      throw new BadRequestException(CONSTANT.WRONG_CREDENTIALS);
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     const loginResponse = await this.getLoginResponse(
@@ -336,7 +336,7 @@ export class AuthService {
       loginDto.device_id,
       ip,
     );
-    return { message: CONSTANT.LOGIN, data: loginResponse };
+    return { message: MESSAGE.LOGIN, data: loginResponse };
   }
 
   async getLoginResponse(
@@ -368,6 +368,6 @@ export class AuthService {
         deleted_at: time,
       },
     );
-    return result.affected ? CONSTANT.LOGOUT : CONSTANT.METHOD_NOT_ALLOWED;
+    return result.affected ? MESSAGE.LOGOUT : MESSAGE.METHOD_NOT_ALLOWED;
   }
 }

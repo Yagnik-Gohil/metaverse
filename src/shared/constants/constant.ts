@@ -1,4 +1,4 @@
-export const CONSTANT = {
+export const MESSAGE = {
   DEFAULT: 'Your request is successfully executed',
   SIGN_UP: 'Signup Successful',
   LOGIN: 'Login Successful',
@@ -22,4 +22,9 @@ export const CONSTANT = {
   ACCOUNT_BLOCKED: 'Your account is blocked by admin',
   UNAUTHENTICATED: 'Please log in to access.',
   FILE_REQUIRED: 'File is required',
+};
+
+export const VALUE = {
+  limit: 10,
+  offset: 0,
 };

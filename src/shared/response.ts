@@ -1,6 +1,6 @@
 import { Response } from 'express';
 import { HttpStatus } from '@nestjs/common';
-import { CONSTANT } from './constants/message';
+import { MESSAGE } from './constants/constant';
 
 interface Data {
   message: string;
@@ -18,7 +18,7 @@ interface List {
 const successCreate = (data: Data, res: Response) => {
   res.status(HttpStatus.CREATED).json({
     status: 1,
-    message: data.message ? data.message : CONSTANT.DEFAULT,
+    message: data.message ? data.message : MESSAGE.DEFAULT,
     data: data.data,
   });
 };
@@ -26,15 +26,15 @@ const successCreate = (data: Data, res: Response) => {
 const successResponse = (data: Data, res: Response) => {
   res.status(HttpStatus.OK).json({
     status: 1,
-    message: data.message ? data.message : CONSTANT.DEFAULT,
+    message: data.message ? data.message : MESSAGE.DEFAULT,
     data: data.data,
   });
 };
 
 const successResponseWithPagination = (data: List, res: Response) => {
   const message = data.data.length
-    ? CONSTANT.RECORD_FOUND('Record')
-    : CONSTANT.RECORD_NOT_FOUND('Record');
+    ? MESSAGE.RECORD_FOUND('Record')
+    : MESSAGE.RECORD_NOT_FOUND('Record');
   res.status(HttpStatus.OK).json({
     status: 1,
     message: data.message ? data.message : message,
@@ -48,7 +48,7 @@ const successResponseWithPagination = (data: List, res: Response) => {
 const recordNotFound = (data: Data, res: Response) =>
   res.status(HttpStatus.OK).json({
     status: 0,
-    message: data.message ? data.message : CONSTANT.RECORD_NOT_FOUND('Record'),
+    message: data.message ? data.message : MESSAGE.RECORD_NOT_FOUND('Record'),
     data: data.data,
   });
 

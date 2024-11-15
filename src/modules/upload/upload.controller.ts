@@ -14,10 +14,10 @@ import { diskStorage } from 'multer';
 import { v4 as uuid } from 'uuid';
 import * as path from 'path';
 import * as fs from 'fs/promises';
-import { CONSTANT } from '@shared/constants/message';
 import response from '@shared/response';
 import { Response } from 'express';
 import { AuthGuard } from '@shared/guard/auth.guard';
+import { MESSAGE } from '@shared/constants/constant';
 
 @Controller('upload')
 export class UploadController {
@@ -51,7 +51,7 @@ export class UploadController {
     @Res() res: Response,
   ) {
     if (!file) {
-      throw new BadRequestException(CONSTANT.FILE_REQUIRED);
+      throw new BadRequestException(MESSAGE.FILE_REQUIRED);
     }
 
     if (!folder) {
@@ -72,7 +72,7 @@ export class UploadController {
 
       return response.successCreate(
         {
-          message: CONSTANT.RECORD_UPLOAD('File'),
+          message: MESSAGE.RECORD_UPLOAD('File'),
           data: image,
         },
         res,

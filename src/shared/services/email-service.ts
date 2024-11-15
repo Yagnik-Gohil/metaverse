@@ -1,5 +1,5 @@
 import { createTransport, Transporter } from 'nodemailer';
-import { CONSTANT } from '../constants/message';
+import { MESSAGE } from '../constants/constant';
 
 interface mailOptions {
   to: string;
@@ -37,7 +37,7 @@ export class EmailService {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     this.transporter.sendMail(mailOptions, (err: Error | null, info: any) => {
       if (err) {
-        console.log('error', CONSTANT.MAIL_NOT_SEND);
+        console.log('error', MESSAGE.MAIL_NOT_SEND);
       }
     });
   }

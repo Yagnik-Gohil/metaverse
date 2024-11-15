@@ -6,37 +6,113 @@ import {
   Patch,
   Param,
   Delete,
+  Res,
+  UseGuards,
+  Query,
 } from '@nestjs/common';
 import { MapService } from './map.service';
 import { CreateMapDto } from './dto/create-map.dto';
 import { UpdateMapDto } from './dto/update-map.dto';
+import response from '@shared/response';
+import { MESSAGE, VALUE } from '@shared/constants/constant';
+import { Response } from 'express';
+import { AuthGuard } from '@shared/guard/auth.guard';
 
 @Controller('map')
 export class MapController {
   constructor(private readonly mapService: MapService) {}
 
   @Post()
-  create(@Body() createMapDto: CreateMapDto) {
-    return this.mapService.create(createMapDto);
+  @UseGuards(AuthGuard)
+  async create(@Body() createMapDto: CreateMapDto, @Res() res: Response) {
+    const data = await this.mapService.create(createMapDto);
+    return response.successCreate(
+      {
+        message: MESSAGE.RECORD_CREATED('Map'),
+        data,
+      },
+      res,
+    );
   }
 
   @Get()
-  findAll() {
-    return this.mapService.findAll();
+  @UseGuards(AuthGuard)
+  async findAll(
+    @Query('limit') limit: number = VALUE.limit,
+    @Query('offset') offset: number = VALUE.offset,
+    @Res() res: Response,
+  ) {
+    const [list, count] = await this.mapService.findAll({
+      select: {
+        id: true,
+        row: true,
+        column: true,
+        thumbnail: true,
+        created_at: true,
+      },
+      take: +limit,
+      skip: +offset,
+    });
+    return response.successResponseWithPagination(
+      {
+        message: MESSAGE.RECORD_FOUND('Map'),
+        total: count,
+        limit: +limit,
+        offset: +offset,
+        data: list,
+      },
+      res,
+    );
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.mapService.findOne(+id);
+  @UseGuards(AuthGuard)
+  async findOne(@Param('id') id: string, @Res() res: Response) {
+    const data = await this.mapService.findOne(id);
+    return response.successResponse(
+      {
+        message: data
+          ? MESSAGE.RECORD_FOUND('Map')
+          : MESSAGE.RECORD_NOT_FOUND('Map'),
+        data,
+      },
+      res,
+    );
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateMapDto: UpdateMapDto) {
-    return this.mapService.update(+id, updateMapDto);
+  @UseGuards(AuthGuard)
+  async update(
+    @Param('id') id: string,
+    @Body() updateMapDto: UpdateMapDto,
+    @Res() res: Response,
+  ) {
+    // ! Manage image upload. REMOVE IMAGES FROM S3
+    const data = await this.mapService.update(id, updateMapDto);
+    return response.successResponse(
+      {
+        message: data.affected
+          ? MESSAGE.RECORD_UPDATED('Map')
+          : MESSAGE.RECORD_NOT_FOUND('Map'),
+        data: {},
+      },
+      res,
+    );
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.mapService.remove(+id);
+  @UseGuards(AuthGuard)
+  async remove(@Param('id') id: string, @Res() res: Response) {
+    // ! REMOVE IMAGES FROM S3
+    const data = await this.mapService.remove(id);
+    return response.successResponse(
+      {
+        message: data.affected
+          ? MESSAGE.RECORD_DELETED('Map')
+          : MESSAGE.RECORD_NOT_FOUND('Map'),
+        data: {},
+      },
+      res,
+    );
   }
 }
