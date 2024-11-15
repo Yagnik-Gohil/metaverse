@@ -7,6 +7,7 @@ export const CONSTANT = {
   RECORD_UPDATED: (record: string) => `${record} Updated Successfully`,
   RECORD_DELETED: (record: string) => `${record} Deleted Successfully`,
   RECORD_FOUND: (record: string) => `${record} Found Successfully`,
+  RECORD_UPLOAD: (record: string) => `${record} Upload Successfully`,
   RECORD_NOT_FOUND: (record: string) => `${record} Not Found`,
   METHOD_NOT_ALLOWED: 'Method Not Allowed.',
   MAIL_NOT_SEND: 'Mail not send for this configuration',
@@ -20,4 +21,5 @@ export const CONSTANT = {
     'OTP Sent to your email, Please complete Signup OTP verification',
   ACCOUNT_BLOCKED: 'Your account is blocked by admin',
   UNAUTHENTICATED: 'Please log in to access.',
+  FILE_REQUIRED: 'File is required',
 };

@@ -13,6 +13,7 @@ import { OtpModule } from './modules/otp/otp.module';
 import { AdminModule } from './modules/admin/admin.module';
 import { Token } from './modules/token/entities/token.entity';
 import { MapModule } from './modules/map/map.module';
+import { UploadModule } from './modules/upload/upload.module';
 
 @Module({
   imports: [
@@ -34,6 +35,7 @@ import { MapModule } from './modules/map/map.module';
     AdminModule,
     TypeOrmModule.forFeature([Token]),
     MapModule,
+    UploadModule,
   ],
   controllers: [AppController],
   providers: [AppService],
