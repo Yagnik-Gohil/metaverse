@@ -1,5 +1,6 @@
+import { Asset } from '@modules/asset/entities/asset.entity';
 import { DefaultEntity } from '@shared/entities/default.entity';
-import { Column, Entity } from 'typeorm';
+import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity()
 export class Map extends DefaultEntity {
@@ -18,9 +19,11 @@ export class Map extends DefaultEntity {
   @Column({ type: 'integer', array: true })
   solid_tile: number[];
 
-  @Column({ type: 'character varying' })
-  tile_set: string;
+  @OneToOne(() => Asset)
+  @JoinColumn({ name: 'tile_set_id' })
+  tile_set: Asset;
 
-  @Column({ type: 'character varying' })
-  thumbnail: string;
+  @OneToOne(() => Asset)
+  @JoinColumn({ name: 'thumbnail_id' })
+  thumbnail: Asset;
 }

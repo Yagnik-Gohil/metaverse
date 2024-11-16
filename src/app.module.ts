@@ -14,6 +14,7 @@ import { AdminModule } from './modules/admin/admin.module';
 import { Token } from './modules/token/entities/token.entity';
 import { MapModule } from './modules/map/map.module';
 import { UploadModule } from './modules/upload/upload.module';
+import { AssetModule } from './modules/asset/asset.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { UploadModule } from './modules/upload/upload.module';
     TypeOrmModule.forFeature([Token]),
     MapModule,
     UploadModule,
+    AssetModule,
   ],
   controllers: [AppController],
   providers: [AppService],

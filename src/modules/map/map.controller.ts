@@ -43,11 +43,11 @@ export class MapController {
     @Res() res: Response,
   ) {
     const [list, count] = await this.mapService.findAll({
+      relations: { thumbnail: true },
       select: {
         id: true,
         row: true,
         column: true,
-        thumbnail: true,
         created_at: true,
       },
       take: +limit,

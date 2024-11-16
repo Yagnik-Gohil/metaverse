@@ -27,4 +27,5 @@ export const MESSAGE = {
 export const VALUE = {
   limit: 10,
   offset: 0,
+  rootFolder: 'metaverse',
 };
