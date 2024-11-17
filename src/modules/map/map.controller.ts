@@ -17,13 +17,16 @@ import response from '@shared/response';
 import { MESSAGE, VALUE } from '@shared/constants/constant';
 import { Response } from 'express';
 import { AuthGuard } from '@shared/guard/auth.guard';
+import { RolesGuard } from '@shared/guard/roles.guard';
+import { Roles } from '@shared/decorators/roles.decorator';
 
 @Controller('map')
 export class MapController {
   constructor(private readonly mapService: MapService) {}
 
   @Post()
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(['admin'])
   async create(@Body() createMapDto: CreateMapDto, @Res() res: Response) {
     const data = await this.mapService.create(createMapDto);
     return response.successCreate(
@@ -81,7 +84,8 @@ export class MapController {
   }
 
   @Patch(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(['admin'])
   async update(
     @Param('id') id: string,
     @Body() updateMapDto: UpdateMapDto,
@@ -101,7 +105,8 @@ export class MapController {
   }
 
   @Delete(':id')
-  @UseGuards(AuthGuard)
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(['admin'])
   async remove(@Param('id') id: string, @Res() res: Response) {
     // ! REMOVE IMAGES FROM S3
     const data = await this.mapService.remove(id);

@@ -42,7 +42,13 @@ export class MapService {
   }
 
   async findOne(id: string) {
-    const result = await this.mapRepository.findOne({ where: { id } });
+    const result = await this.mapRepository.findOne({
+      where: { id },
+      relations: {
+        thumbnail: true,
+        tile_set: true,
+      },
+    });
     return plainToInstance(Map, result);
   }
 
