@@ -49,8 +49,10 @@ export class MapController {
       relations: { thumbnail: true },
       select: {
         id: true,
+        name: true,
         row: true,
         column: true,
+        tile_size: true,
         created_at: true,
       },
       take: +limit,

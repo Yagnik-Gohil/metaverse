@@ -9,6 +9,10 @@ import {
 
 export class CreateMapDto {
   @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsNotEmpty()
   @IsInt()
   row: number;
 

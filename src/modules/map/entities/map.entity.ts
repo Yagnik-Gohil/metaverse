@@ -4,6 +4,9 @@ import { Column, Entity, JoinColumn, OneToOne } from 'typeorm';
 
 @Entity()
 export class Map extends DefaultEntity {
+  @Column({ type: 'character varying' })
+  name: string;
+
   @Column({ type: 'integer' })
   row: number;
 

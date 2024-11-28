@@ -10,7 +10,7 @@
 
 ## Commands
 
-#### Migration create command: (Auto detact)
+#### Migration create command: (Auto detect)
 
 ```
 npm run migration:generate src/migrations/name
