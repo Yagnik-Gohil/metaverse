@@ -276,6 +276,16 @@ export class AuthService {
       throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
+    const isCorrectPassword = await this.comparePassword(
+      loginDto.password,
+      user.password,
+    );
+
+    // Wrong Password
+    if (!isCorrectPassword) {
+      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
+    }
+
     // Signup is not complete
     if (!user.is_verified) {
       return {
@@ -287,16 +297,6 @@ export class AuthService {
     // User is blocked
     if (user.status == UserStatus.BLOCKED) {
       throw new BadRequestException(MESSAGE.ACCOUNT_BLOCKED);
-    }
-
-    const isCorrectPassword = await this.comparePassword(
-      loginDto.password,
-      user.password,
-    );
-
-    // Wrong Password
-    if (!isCorrectPassword) {
-      throw new BadRequestException(MESSAGE.WRONG_CREDENTIALS);
     }
 
     const loginResponse = await this.getLoginResponse(

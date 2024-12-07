@@ -15,6 +15,7 @@ import { Token } from './modules/token/entities/token.entity';
 import { MapModule } from './modules/map/map.module';
 import { UploadModule } from './modules/upload/upload.module';
 import { AssetModule } from './modules/asset/asset.module';
+import { AvatarModule } from './modules/avatar/avatar.module';
 
 @Module({
   imports: [
@@ -38,6 +39,7 @@ import { AssetModule } from './modules/asset/asset.module';
     MapModule,
     UploadModule,
     AssetModule,
+    AvatarModule,
   ],
   controllers: [AppController],
   providers: [AppService],

@@ -1,8 +1,9 @@
+import { Avatar } from '@modules/avatar/entities/avatar.entity';
 import { UserStatus } from '@shared/constants/enum';
 import { DefaultEntity } from '@shared/entities/default.entity';
 import { Exclude } from 'class-transformer';
 import { Token } from 'src/modules/token/entities/token.entity';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne, JoinColumn } from 'typeorm';
 
 @Entity()
 export class User extends DefaultEntity {
@@ -31,4 +32,8 @@ export class User extends DefaultEntity {
 
   @OneToMany(() => Token, (token) => token.user)
   token: Token[];
+
+  @ManyToOne(() => Avatar, (avatar) => avatar.user, { onDelete: 'CASCADE' })
+  @JoinColumn({ name: 'avatar_id' })
+  avatar: Avatar;
 }

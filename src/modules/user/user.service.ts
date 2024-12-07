@@ -20,12 +20,18 @@ export class UserService {
   async findOne(id: string) {
     const result = await this.userRepository.findOne({
       where: { id },
+      relations: { avatar: { image: true } },
     });
     return plainToInstance(User, result);
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    const { name, avatar } = updateUserDto;
+    const result = await this.userRepository.update(id, {
+      name,
+      avatar: { id: avatar },
+    });
+    return result;
   }
 
   remove(id: number) {

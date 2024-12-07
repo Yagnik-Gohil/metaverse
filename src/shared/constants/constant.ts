@@ -22,6 +22,8 @@ export const MESSAGE = {
   ACCOUNT_BLOCKED: 'Your account is blocked by admin',
   UNAUTHENTICATED: 'Please log in to access.',
   FILE_REQUIRED: 'File is required',
+  USER_USING_AVATAR: (count: number) =>
+    `${count} ${count === 1 ? 'user is' : 'users are'} using this avatar.`,
 };
 
 export const VALUE = {

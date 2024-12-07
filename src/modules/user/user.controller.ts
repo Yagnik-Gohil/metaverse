@@ -8,6 +8,7 @@ import {
   UseGuards,
   Query,
   Res,
+  Req,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -46,6 +47,23 @@ export class UserController {
     );
   }
 
+  @Get('profile')
+  @UseGuards(AuthGuard, RolesGuard)
+  @Roles(['user'])
+  async profile(@Req() req: Request, @Res() res: Response) {
+    const user = req['entity']['user'];
+    const data = await this.userService.findOne(user.id);
+    return response.successResponse(
+      {
+        message: data
+          ? MESSAGE.RECORD_FOUND('Profile')
+          : MESSAGE.RECORD_NOT_FOUND('Profile'),
+        data,
+      },
+      res,
+    );
+  }
+
   @Get(':id')
   @UseGuards(AuthGuard, RolesGuard)
   @Roles(['admin'])
@@ -62,11 +80,25 @@ export class UserController {
     );
   }
 
-  @Patch(':id')
+  @Patch('profile')
   @UseGuards(AuthGuard, RolesGuard)
-  @Roles(['admin'])
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(+id, updateUserDto);
+  @Roles(['user'])
+  async updateProfile(
+    @Body() updateUserDto: UpdateUserDto,
+    @Req() req: Request,
+    @Res() res: Response,
+  ) {
+    const user = req['entity']['user'];
+    const data = await this.userService.update(user.id, updateUserDto);
+    return response.successResponse(
+      {
+        message: data.affected
+          ? MESSAGE.RECORD_UPDATED('Profile')
+          : MESSAGE.RECORD_NOT_FOUND('Profile'),
+        data: {},
+      },
+      res,
+    );
   }
 
   @Delete(':id')
