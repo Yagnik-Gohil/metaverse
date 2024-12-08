@@ -16,6 +16,7 @@ import { IJwtPayload } from '@shared/constants/types';
 import { MESSAGE } from '@shared/constants/constant';
 import generateRandomOtp from '@shared/function/generate-random-otp';
 import { OtpType, UserStatus } from '@shared/constants/enum';
+import { Avatar } from '@modules/avatar/entities/avatar.entity';
 
 @Injectable()
 export class AuthService {
@@ -28,6 +29,8 @@ export class AuthService {
     private readonly adminRepository: Repository<Admin>,
     @InjectRepository(Otp)
     private readonly otpRepository: Repository<Otp>,
+    @InjectRepository(Avatar)
+    private readonly avatarRepository: Repository<Avatar>,
   ) {}
 
   async getToken(
@@ -133,10 +136,15 @@ export class AuthService {
 
     const hashedPassword = await this.hashPassword(signUpDto.password);
 
+    const [avatar] = await this.avatarRepository.query(
+      'SELECT id FROM avatar WHERE deleted_at IS NULL ORDER BY RANDOM() LIMIT 1;',
+    );
+
     const user = await this.userRepository.save({
       name: signUpDto.name,
       email: signUpDto.email,
       password: hashedPassword,
+      avatar: avatar,
     });
 
     // Store OTP to database

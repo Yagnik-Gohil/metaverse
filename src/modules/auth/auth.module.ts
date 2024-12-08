@@ -6,9 +6,10 @@ import { User } from '../user/entities/user.entity';
 import { Token } from '../token/entities/token.entity';
 import { Otp } from '../otp/entities/otp.entity';
 import { Admin } from '../admin/entities/admin.entity';
+import { Avatar } from '@modules/avatar/entities/avatar.entity';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Token, Otp, Admin])],
+  imports: [TypeOrmModule.forFeature([User, Token, Otp, Admin, Avatar])],
   controllers: [AuthController],
   providers: [AuthService],
 })
