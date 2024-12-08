@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { CreateAvatarDto } from './dto/create-avatar.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Avatar } from './entities/avatar.entity';
-import { FindManyOptions, Repository } from 'typeorm';
+import { Repository } from 'typeorm';
 import { Asset } from '@modules/asset/entities/asset.entity';
 import { plainToInstance } from 'class-transformer';
 import { DefaultStatus } from '@shared/constants/enum';
@@ -37,8 +37,24 @@ export class AvatarService {
     return plainToInstance(Map, data);
   }
 
-  async findAll(where: FindManyOptions<Avatar>): Promise<[Avatar[], number]> {
-    const [list, count] = await this.avatarRepository.findAndCount(where);
+  async findAll(limit: number, offset: number): Promise<[Avatar[], number]> {
+    const query = this.avatarRepository
+      .createQueryBuilder('avatar')
+      .select([
+        'avatar.id AS id',
+        'avatar.tile_size AS tile_size',
+        'avatar.created_at AS created_at',
+        'asset.base_url || asset.root || asset.folder || asset.name AS image',
+        'COUNT(u.id)::INTEGER AS users',
+      ])
+      .innerJoin('asset', 'asset', 'asset.id = avatar.image_id')
+      .leftJoin('user', 'u', 'u.avatar_id = avatar.id')
+      .groupBy('avatar.id, asset.id')
+      .orderBy('avatar.created_at', 'DESC');
+
+    const list = await query.limit(limit).offset(offset).getRawMany();
+    const count = await query.getCount();
+
     return [plainToInstance(Avatar, list), count];
   }
 

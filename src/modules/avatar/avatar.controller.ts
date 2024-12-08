@@ -43,11 +43,7 @@ export class AvatarController {
     @Query('offset') offset: number = VALUE.offset,
     @Res() res: Response,
   ) {
-    const [list, count] = await this.avatarService.findAll({
-      relations: { image: true },
-      take: +limit,
-      skip: +offset,
-    });
+    const [list, count] = await this.avatarService.findAll(limit, offset);
     return response.successResponseWithPagination(
       {
         message: MESSAGE.RECORD_FOUND('Avatar'),
